@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BROODIS Leaderboard Affiliate</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #111213;
+    --surface: #1e2022;
+    --surface2: #26292b;
+    --orange: #E8400C;
+    --white: #f0f0f0;
+    --muted: #8a8f94;
+    --border: rgba(255,255,255,0.07);
+    --font: 'Onest', sans-serif;
+    --font-cond: 'Onest', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--font);
+    min-height: 100vh;
+    padding: 28px 32px 40px;
+  }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .brand { line-height: 1; }
+  .brand-name {
+    font-family: var(--font-cond);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .brand-title {
+    font-family: var(--font-cond);
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .brand-title .accent { color: var(--orange); }
+
+  /* DATE CONTROLS */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .controls label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .controls input[type="date"] {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 7px 12px;
+    border-radius: 6px;
+    font-family: var(--font);
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+  }
+  .controls input[type="date"]:focus { border-color: var(--orange); }
+  .controls input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor: pointer; }
+
+  .btn-apply {
+    background: var(--orange);
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: opacity 0.15s;
+  }
+  .btn-apply:hover { opacity: 0.85; }
+
+  /* TOP N FILTER */
+  .top-filter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .top-filter label { font-size: 12px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+  .top-filter select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-family: var(--font);
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+  }
+  .top-filter select:focus { border-color: var(--orange); }
+
+  /* SCORECARDS */
+  .scorecards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 220px));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .card-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .card-value {
+    font-family: var(--font-cond);
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  /* TABLE */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .table-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .table-header-bar h2 {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .channel-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pill {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font);
+    transition: all 0.15s;
+    letter-spacing: 0.04em;
+  }
+  .pill.active, .pill:hover {
+    background: var(--orange);
+    color: #fff;
+    border-color: var(--orange);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead th {
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  thead th.num { text-align: right; }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+
+  td {
+    padding: 11px 16px;
+    color: var(--white);
+    vertical-align: middle;
+  }
+  td.rank {
+    font-family: var(--font-cond);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--muted);
+    width: 40px;
+  }
+  td.rank.top1 { color: #FFD700; }
+  td.rank.top2 { color: #C0C0C0; }
+  td.rank.top3 { color: #CD7F32; }
+  td.username {
+    font-weight: 600;
+    font-size: 13px;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  td.channel-badge { width: 120px; }
+  .badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .badge-shopee { background: rgba(238,77,45,0.18); color: #EE4D2D; }
+  .badge-tiktok { background: rgba(105,201,208,0.15); color: #69C9D0; }
+  .badge-other { background: rgba(138,143,148,0.18); color: var(--muted); }
+
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.gmv { font-weight: 700; color: #6ee7b7; }
+  td.komisi { color: #fbbf24; }
+
+  /* LOADING / ERROR */
+  .state-msg {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .spinner {
+    display: inline-block;
+    width: 22px; height: 22px;
+    border: 2px solid var(--border);
+    border-top-color: var(--orange);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-bottom: 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 20px;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">
+    <div class="brand-name">Broodis</div>
+    <div class="brand-title"><span class="accent">Leaderboard</span> Affiliate</div>
+  </div>
+  <div style="display:flex; flex-direction:column; gap:10px; align-items:flex-end;">
+    <div class="controls">
+      <label>Dari</label>
+      <input type="date" id="dateFrom">
+      <label>Sampai</label>
+      <input type="date" id="dateTo">
+      <button class="btn-apply" onclick="applyFilter()">Terapkan</button>
+    </div>
+    <div class="controls">
+      <div class="top-filter">
+        <label>Tampilkan</label>
+        <select id="topN" onchange="applyFilter()">
+          <option value="10">Top 10</option>
+          <option value="25">Top 25</option>
+          <option value="50">Top 50</option>
+          <option value="100" selected>Top 100</option>
+          <option value="999">Semua</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="scorecards">
+  <div class="card">
+    <div class="card-label">Total Video</div>
+    <div class="card-value" id="totalVideo">—</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Total Affiliate</div>
+    <div class="card-value" id="totalAffiliate">—</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Total GMV</div>
+    <div class="card-value" id="totalGMV">—</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Total Komisi</div>
+    <div class="card-value" id="totalKomisi">—</div>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <div class="table-header-bar">
+    <h2>Ranking Affiliate</h2>
+    <div class="channel-pills" id="channelPills"></div>
+  </div>
+  <div id="tableContainer">
+    <div class="state-msg"><div class="spinner"></div><br>Memuat data...</div>
+  </div>
+</div>
+
+<div class="footer" id="footer"></div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwXBRSXo4uzajTTQ-xL-rHNDRwj2zCua11-fHziH6nObgqZ6Y_69a8KCUwoWU2KuduZ7Q/exec';
+
+let allData = [];
+let activeChannel = 'Semua';
+
+function fmt(n) {
+  if (n === null || n === undefined || isNaN(n)) return '0';
+  return Math.round(n).toLocaleString('id-ID');
+}
+
+function fmtShort(n) {
+  if (!n || isNaN(n)) return '0';
+  n = Math.round(n);
+  if (n >= 1e9) return (n/1e9).toFixed(1) + 'M';
+  if (n >= 1e6) return (n/1e6).toFixed(1) + 'jt';
+  if (n >= 1e3) return (n/1e3).toFixed(1) + 'rb';
+  return n.toString();
+}
+
+function getDateStr(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${dd}`;
+}
+
+function initDates() {
+  const now = new Date();
+  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+  document.getElementById('dateFrom').value = getDateStr(firstDay);
+  document.getElementById('dateTo').value = getDateStr(now);
+}
+
+window.handleData = function(result) {
+  try {
+    let rows = [];
+    if (Array.isArray(result)) {
+      rows = result;
+    } else if (result && result.data) {
+      rows = result.data;
+    } else if (result && result.leaderboard) {
+      rows = result.leaderboard;
+    } else if (result && typeof result === 'object') {
+      const keys = Object.keys(result);
+      for (const k of keys) {
+        if (Array.isArray(result[k])) { rows = result[k]; break; }
+      }
+    }
+
+    // Normalize field names (case-insensitive)
+    rows = rows.map(r => {
+      const norm = {};
+      for (const [k, v] of Object.entries(r)) {
+        norm[k.toLowerCase()] = v;
+      }
+      return {
+        username: norm.username || norm.user || norm.name || '',
+        channel:  norm.channel || norm.platform || '',
+        source:   norm.source || '',
+        gmv:      parseFloat(norm.gmv) || 0,
+        pesanan:  parseFloat(norm.pesanan) || parseFloat(norm.orders) || 0,
+        komisi:   parseFloat(norm.komisi) || parseFloat(norm.commission) || 0,
+        video:    parseFloat(norm.video) || parseFloat(norm.videos) || 1,
+      };
+    }).filter(r => r.username);
+
+    allData = rows;
+    buildChannelPills();
+    renderTable();
+    document.getElementById('footer').textContent =
+      'Data terakhir diperbarui: ' + new Date().toLocaleString('id-ID');
+  } catch(err) {
+    showError('Gagal memproses data: ' + err.message);
+  }
+};
+
+function buildChannelPills() {
+  const channels = ['Semua', ...new Set(allData.map(r => r.channel).filter(Boolean))];
+  const container = document.getElementById('channelPills');
+  container.innerHTML = '';
+  channels.forEach(ch => {
+    const btn = document.createElement('button');
+    btn.className = 'pill' + (ch === activeChannel ? ' active' : '');
+    btn.textContent = ch;
+    btn.onclick = () => { activeChannel = ch; buildChannelPills(); renderTable(); };
+    container.appendChild(btn);
+  });
+}
+
+function renderTable() {
+  let rows = activeChannel === 'Semua' ? allData : allData.filter(r => r.channel === activeChannel);
+  const topN = parseInt(document.getElementById('topN').value) || 100;
+  rows = rows.slice(0, topN);
+
+  const totalGMV = rows.reduce((s, r) => s + r.gmv, 0);
+  const totalKomisi = rows.reduce((s, r) => s + r.komisi, 0);
+  const totalVideo = rows.reduce((s, r) => s + r.video, 0);
+  const totalAffiliate = new Set(rows.map(r => r.username)).size;
+
+  document.getElementById('totalVideo').textContent = fmt(totalVideo);
+  document.getElementById('totalAffiliate').textContent = fmt(totalAffiliate);
+  document.getElementById('totalGMV').textContent = fmtShort(totalGMV);
+  document.getElementById('totalKomisi').textContent = fmtShort(totalKomisi);
+
+  if (!rows.length) {
+    document.getElementById('tableContainer').innerHTML =
+      '<div class="state-msg">Tidak ada data untuk filter ini.</div>';
+    return;
+  }
+
+  let html = `<table>
+    <thead><tr>
+      <th>#</th>
+      <th>Username</th>
+      <th>Channel</th>
+      <th class="num">GMV</th>
+      <th class="num">Pesanan</th>
+      <th class="num">Komisi</th>
+    </tr></thead><tbody>`;
+
+  rows.forEach((r, i) => {
+    const rankClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i+1);
+    const ch = (r.channel || '').toLowerCase();
+    const badgeClass = ch.includes('shopee') ? 'badge-shopee' : ch.includes('tiktok') || ch.includes('tok') ? 'badge-tiktok' : 'badge-other';
+
+    html += `<tr>
+      <td class="rank ${rankClass}">${medal}</td>
+      <td class="username">${r.username}</td>
+      <td class="channel-badge"><span class="badge ${badgeClass}">${r.channel || '-'}</span></td>
+      <td class="num gmv">${fmt(r.gmv)}</td>
+      <td class="num">${fmt(r.pesanan)}</td>
+      <td class="num komisi">${fmt(r.komisi)}</td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  document.getElementById('tableContainer').innerHTML = html;
+}
+
+function showError(msg) {
+  document.getElementById('tableContainer').innerHTML =
+    `<div class="state-msg">⚠️ ${msg}</div>`;
+}
+
+function applyFilter() {
+  const from = document.getElementById('dateFrom').value;
+  const to   = document.getElementById('dateTo').value;
+  const topN = document.getElementById('topN').value;
+
+  document.getElementById('tableContainer').innerHTML =
+    '<div class="state-msg"><div class="spinner"></div><br>Memuat data...</div>';
+
+  const old = document.getElementById('jsonp-script');
+  if (old) old.remove();
+
+  const s = document.createElement('script');
+  s.id = 'jsonp-script';
+  const p = new URLSearchParams({ top: topN, from: from, to: to, callback: 'handleData' });
+  s.src = SCRIPT_URL + '?' + p.toString();
+  s.onerror = () => showError('Gagal memuat data. Cek koneksi atau izin script.');
+  document.body.appendChild(s);
+}
+
+initDates();
+applyFilter();
+</script>
+</body>
+</html>
